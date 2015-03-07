@@ -33,7 +33,7 @@ public class DES {
             //System.out.println(s1 + " , " + byteToSting(text[i]));
         }
         cText = PERMUTATION(cText,IP);
-        //cText = STAGE2(cText);
+        cText = STAGE2(cText,key);
 
     }
 
@@ -98,13 +98,15 @@ public class DES {
         
         String Li = cText.substring(0, 32);
         String Ri = cText.substring(32,64);
+        System.out.print("L0"+ ":\t" + Li);
+        System.out.println(" R0"+ ":\t" + Ri);
         String cMesage = "";
         
         for (int i = 1; i <= 16; i++) {
-            
+            String temp = Li;
             Li = Ri;
             System.out.print("L" + i + ":\t" + Li);
-            Ri = XOR(Li,inerF(Ri,keys[i-1])) ;
+            Ri = XOR(temp,"00100011010010101010100110111011");//inerF(Ri,keys[i-1])) ;
             System.out.println(" R" + i + ":\t" + Ri);
         }
         
@@ -113,10 +115,11 @@ public class DES {
     
     public static String XOR(String Li,String inerF){
         
-        byte LI = Byte.parseByte(Li, 2);
-        byte INF = Byte.parseByte(inerF, 2);
-        byte ans =(byte) (LI ^ INF);
-        return String.format("%8s", Integer.toBinaryString(ans & 0xFF)).replace(' ', '0');
+        //System.out.println(" Le:\t"+inerF);
+        
+        BigInteger LI = new BigInteger(Li, 2);
+        BigInteger INF = new BigInteger(inerF, 2);
+        return LI.xor(INF).toString(2);
     }
     
     public static String inerF(String Ri,String ki) {
