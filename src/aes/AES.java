@@ -30,6 +30,23 @@ public class AES {
     {"e1", "f8", "98", "11", "69", "d9", "8e", "94", "9b", "1e", "87", "e9", "ce", "55", "28", "df"},
     {"8c", "a1", "89", "0d", "bf", "e6", "42", "68", "41", "99", "2d", "0f", "b0", "54", "bb", "16"}};
 
+    final static String[][] invSbox = {{"52", "09", "6a", "d5", "30", "36", "a5", "38", "bf", "40", "a3", "9e", "81", "f3", "d7", "fb"},
+    {"7c", "e3", "39", "82", "9b", "2f", "ff", "87", "34", "8e", "43", "44", "c4", "de", "e9", "cb"},
+    {"54", "7b", "94", "32", "a6", "c2", "23", "3d", "ee", "4c", "95", "0b", "42", "fa", "c3", "4e"},
+    {"08", "2e", "a1", "66", "28", "d9", "24", "b2", "76", "5b", "a2", "49", "6d", "8b", "d1", "25"},
+    {"72", "f8", "f6", "64", "86", "68", "98", "16", "d4", "a4", "5c", "cc", "5d", "65", "b6", "92"},
+    {"6c", "70", "48", "50", "fd", "ed", "b9", "da", "5e", "15", "46", "57", "a7", "8d", "9d", "84"},
+    {"90", "d8", "ab", "00", "8c", "bc", "d3", "0a", "f7", "e4", "58", "05", "b8", "b3", "45", "06"},
+    {"d0", "2c", "1e", "8f", "ca", "3f", "0f", "02", "c1", "af", "bd", "03", "01", "13", "8a", "6b"},
+    {"3a", "91", "11", "41", "4f", "67", "dc", "ea", "97", "f2", "cf", "ce", "f0", "b4", "e6", "73"},
+    {"96", "ac", "74", "22", "e7", "ad", "35", "85", "e2", "f9", "37", "e8", "1c", "75", "df", "6e"},
+    {"47", "f1", "1a", "71", "1d", "29", "c5", "89", "6f", "b7", "62", "0e", "aa", "18", "be", "1b"},
+    {"fc", "56", "3e", "4b", "c6", "d2", "79", "20", "9a", "db", "c0", "fe", "78", "cd", "5a", "f4"},
+    {"1f", "dd", "a8", "33", "88", "07", "c7", "31", "b1", "12", "10", "59", "27", "80", "ec", "5f"},
+    {"60", "51", "7f", "a9", "19", "b5", "4a", "0d", "2d", "e5", "7a", "9f", "93", "c9", "9c", "ef"},
+    {"a0", "e0", "3b", "4d", "ae", "2a", "f5", "b0", "c8", "eb", "bb", "3c", "83", "53", "99", "61"},
+    {"17", "2b", "04", "7e", "ba", "77", "d6", "26", "e1", "69", "14", "63", "55", "21", "0c", "7d"}};
+
     final static String[][] eTable = {{"01", "03", "05", "0f", "11", "33", "55", "ff", "1a", "2e", "72", "96", "a1", "f8", "13", "35"},
     {"5f", "e1", "38", "48", "d8", "73", "95", "a4", "f7", "02", "06", "0a", "1e", "22", "66", "aa"},
     {"e5", "34", "5c", "e4", "37", "59", "eb", "26", "6a", "be", "d9", "70", "90", "ab", "e6", "31"},
@@ -64,38 +81,34 @@ public class AES {
     {"44", "11", "92", "d9", "23", "20", "2e", "89", "b4", "7c", "b8", "26", "77", "99", "e3", "a5"},
     {"67", "4a", "ed", "de", "c5", "31", "fe", "18", "0d", "63", "8c", "80", "c0", "f7", "70", "07"}};
 
-    final static String roundC[] = {"01", "02", "04", "08", "10", "20", "40", "80", "1b", "36", "6c"};
+    final static String[] roundConst = {"01", "02", "04", "08", "10", "20", "40", "80", "1b", "36", "6c"};
 
     public static void main(String[] args) {
 
-        String message = "41 45 53 20 65 73 20 6d 75 79 20 66 61 63 69 6c";
-        String key = "2b 7e 15 16 28 ae d2 a6 ab f7 15 88 09 cf 4f 3c";
-        
-        String[][] messageM = strColToMatrix(message);
-        String[][] keyM = strColToMatrix(key);
+        String strMessage = "41 45 53 20 65 73 20 6d 75 79 20 66 61 63 69 6c";
+        String strKey = "2b 7e 15 16 28 ae d2 a6 ab f7 15 88 09 cf 4f 3c";
+
+        String[][] message = strColToMatrix(strMessage);
+        String[][] key = strColToMatrix(strKey);
         System.out.println("Generated Keys");
-        String[] [][] keys=keyGenerator(keyM);
+        String[][][] keys = keyGenerator(key);
         System.out.println("Encrypted message");
-        encryptMessage(messageM,keyM,keys);
-        
-        
-        
-        
-        
+        String[][] encrypt = encryptMessage(message, key, keys);
+        System.out.println("Decrypted message");
+        printM(decryptMessage(encrypt, key, keys));
 
-       
     }
 
-    static String [][] encryptMessage(String[][] message,String[][] masterKey,String[] [][] keys){
-        String[][] encrypt=xorHexMatrix(masterKey,message);
-        
-                for(int i=0;i<9;i++){
-                   encrypt=matrixMultGalois(SR(sboxM(encrypt)));
-                   encrypt=xorHexMatrix(keys[i],encrypt);
-                }
-                printM(xorHexMatrix(SR(sboxM(encrypt)),keys[9]));
-        return xorHexMatrix(SR(sboxM(encrypt)),keys[9]);
+    static String[][] encryptMessage(String[][] message, String[][] masterKey, String[][][] keys) {
+        String[][] encrypt = xorHex(masterKey, message);
+
+        for (int i = 0; i < 9; i++) {
+            encrypt = xorHex(keys[i], mixColumn(shiftRow(sBox(encrypt))));
+        }
+        printM(xorHex(shiftRow(sBox(encrypt)), keys[9]));
+        return xorHex(shiftRow(sBox(encrypt)), keys[9]);
     }
+
     static String[][][] keyGenerator(String[][] keyM) {
         String[] columns = new String[44];
         String[] keyColumns = matrixToCol(keyM);
@@ -107,9 +120,9 @@ public class AES {
         String keys[][][] = new String[10][4][4];
         for (int i = 4; i < 44; i++) {
             if (0 == i % 4) {
-                columns[i] = (xorHex(columns[i - 4], xorHex(roundC((i - 4) / 4), sbox(shiftLeft(columns[i - 1], 2)))));
+                columns[i] = (AES.xorHex(columns[i - 4], AES.xorHex(roundConst((i - 4) / 4), AES.sBox(shiftLeft(columns[i - 1], 2)))));
             } else {
-                columns[i] = xorHex(columns[i - 4], columns[i - 1]);
+                columns[i] = AES.xorHex(columns[i - 4], columns[i - 1]);
             }
 
             aux += columns[i].substring(0, 2) + " " + columns[i].substring(2, 4) + " "
@@ -144,6 +157,7 @@ public class AES {
         }
         return matrix;
     }
+
     public static String[][] strRowToMatrix(String matrixString) {
         String[] array = matrixString.split(" ");
         String[][] matrix = new String[4][4];
@@ -169,31 +183,42 @@ public class AES {
         return aux;
     }
 
+    static String[][] xorHex(String[][] one, String[][] two) {
+        String[][] xor = new String[4][4];
+        for (int i = 0; i < 4; i++) {
+
+            for (int j = 0; j < 4; j++) {
+                xor[i][j] = AES.xorHex(one[i][j], two[i][j]);
+            }
+        }
+        return xor;
+    }
+
     static String shiftLeft(String one, int i) {
         int size = one.length();
         return one.substring(i, size) + one.substring(0, i);
     }
 
-    static String sbox(String hex) {
-        String subWord = "";
+    static String sBox(String hex) {
+        String boxed = "";
         for (int i = 0; i < 8; i = i + 2) {
-            subWord += sbox[Integer.parseInt(hexToDec(hex.substring(i, i + 1)))][Integer.parseInt(hexToDec(hex.substring(i + 1, i + 2)))];
+            boxed += sbox[Integer.parseInt(hexToDec(hex.substring(i, i + 1)))][Integer.parseInt(hexToDec(hex.substring(i + 1, i + 2)))];
         }
-        return subWord;
+        return boxed;
     }
-    static String[][] sboxM(String[][] matrix) {
-        String [][] sboxed=new String [4][4];
+
+    static String[][] sBox(String[][] matrix) {
+        String[][] boxed = new String[4][4];
         for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j ++) {
-             sboxed[i][j]= sbox[Integer.parseInt(hexToDec(matrix[i][j].substring(0, 1)))][Integer.parseInt(hexToDec(matrix[i][j].substring(1,2)))];
+            for (int j = 0; j < 4; j++) {
+                boxed[i][j] = sbox[Integer.parseInt(hexToDec(matrix[i][j].substring(0, 1)))][Integer.parseInt(hexToDec(matrix[i][j].substring(1, 2)))];
+            }
         }
-        }
-        return sboxed;
+        return boxed;
     }
 
-    static String roundC(int i) {
-
-        return roundC[i] + "000000";
+    static String roundConst(int i) {
+        return roundConst[i] + "000000";
     }
 
     static String[] matrixToCol(String[][] matrix) {
@@ -204,7 +229,6 @@ public class AES {
                 aux += matrix[j][i];
             }
             columns[i] = aux;
-            //System.out.println(aux);
             aux = "";
         }
         return columns;
@@ -218,7 +242,6 @@ public class AES {
                 aux += matrix[i][j];
             }
             rows[i] = aux;
-            //System.out.println(aux);
             aux = "";
         }
         return rows;
@@ -237,14 +260,14 @@ public class AES {
         while (sumHex.length() < 2) {
             sumHex = "0" + sumHex;
         }
-        String three = eTableValueDec(sumHex).toString(16);
-        while (three.length() < 2) {
-            three = "0" + three;
+        String mult = eTableValueDec(sumHex).toString(16);
+        while (mult.length() < 2) {
+            mult = "0" + mult;
         }
-        return three;
+        return mult;
     }
 
-    static String[][] matrixMultGalois(String[][] matrix) {
+    static String[][] mixColumn(String[][] matrix) {
         String[][] constant = {{"02", "03", "01", "01"}, {"01", "02", "03", "01"}, {"01", "01", "02", "03"}, {"03", "01", "01", "02"}};
         String[][] mult = new String[4][4];
         String[] ColumnMatrix = matrixToCol(matrix);
@@ -256,33 +279,76 @@ public class AES {
                 String two = multGalois(ColumnMatrix[j].substring(2, 4), RowConstant[i].substring(2, 4));
                 String three = multGalois(ColumnMatrix[j].substring(4, 6), RowConstant[i].substring(4, 6));
                 String four = multGalois(ColumnMatrix[j].substring(6, 8), RowConstant[i].substring(6, 8));
-                mult[i][j] = xorHex(one, xorHex(two, xorHex(three, four)));
+                mult[i][j] = AES.xorHex(one, AES.xorHex(two, AES.xorHex(three, four)));
             }
         }
 
         return mult;
     }
-    
-    static String[][] xorHexMatrix(String[][] one,String[][] two){
-        String[][] xor=new String[4][4];
-        for (int i = 0; i < 4; i++) {
 
-            for (int j = 0; j < 4; j++) {
-                xor[i][j] =xorHex(one[i][j],two[i][j]);
+    static String[][] shiftRow(String[][] unshift) {
+        String[] rows = matrixToRow(unshift);
+        String matrixString = "";
+
+        for (int i = 0; i < 4; i++) {
+            rows[i] = shiftLeft(rows[i], i * 2);
+            matrixString += rows[i].substring(0, 2) + " " + rows[i].substring(2, 4) + " " + rows[i].substring(4, 6) + " " + rows[i].substring(6, 8) + " ";
+
+        }
+
+        return strRowToMatrix(matrixString.substring(0, matrixString.length() - 1));
+    }
+
+    static String[][] invMixColumn(String[][] matrix) {
+        String[][] constant = {{"0e", "0b", "0d", "09"}, {"09", "0e", "0b", "0d"}, {"0d", "09", "0e", "0b"}, {"0b", "0d", "09", "0e"}};
+        String[][] mult = new String[4][4];
+        String[] ColumnMatrix = matrixToCol(matrix);
+        String[] RowConstant = matrixToRow(constant);
+
+        for (int i = 0; i < mult.length; i++) {
+            for (int j = 0; j < mult[0].length; j++) {
+                String one = multGalois(ColumnMatrix[j].substring(0, 2), RowConstant[i].substring(0, 2));
+                String two = multGalois(ColumnMatrix[j].substring(2, 4), RowConstant[i].substring(2, 4));
+                String three = multGalois(ColumnMatrix[j].substring(4, 6), RowConstant[i].substring(4, 6));
+                String four = multGalois(ColumnMatrix[j].substring(6, 8), RowConstant[i].substring(6, 8));
+                mult[i][j] = AES.xorHex(one, AES.xorHex(two, AES.xorHex(three, four)));
             }
         }
-        return xor;
+
+        return mult;
     }
-    static String[][] SR(String[][] unshift){
-        String[] rows=matrixToRow(unshift);
-        String matrixString="";
-        
+
+    static String[][] invShiftRow(String[][] unshift) {
+        String[] rows = matrixToRow(unshift);
+        String matrixString = "";
+
         for (int i = 0; i < 4; i++) {
-            rows[i]=shiftLeft(rows[i],i*2);
-            matrixString+=rows[i].substring(0, 2)+" "+rows[i].substring(2, 4)+" "+rows[i].substring(4, 6)+" "+rows[i].substring(6, 8)+" ";
-          
+            rows[i] = shiftLeft(rows[i], 8 - (i * 2));
+            matrixString += rows[i].substring(0, 2) + " " + rows[i].substring(2, 4) + " " + rows[i].substring(4, 6) + " " + rows[i].substring(6, 8) + " ";
+
         }
-        
-        return strRowToMatrix(matrixString.substring(0, matrixString.length()-1));
+
+        return strRowToMatrix(matrixString.substring(0, matrixString.length() - 1));
+    }
+
+    static String[][] invSbox(String[][] matrix) {
+        String[][] boxed = new String[4][4];
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                boxed[i][j] = invSbox[Integer.parseInt(hexToDec(matrix[i][j].substring(0, 1)))][Integer.parseInt(hexToDec(matrix[i][j].substring(1, 2)))];
+            }
+        }
+        return boxed;
+    }
+
+    static String[][] decryptMessage(String[][] encrypt, String[][] masterKey, String[][][] keys) {
+
+        String[][] decrypt = invSbox(invShiftRow(xorHex(encrypt, keys[9])));
+
+        for (int i = 8; i >= 0; i--) {
+            decrypt = invSbox(invShiftRow(invMixColumn(xorHex(decrypt, keys[i]))));
+        }
+
+        return xorHex(decrypt, masterKey);
     }
 }
