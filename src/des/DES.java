@@ -27,11 +27,19 @@ public class DES {
 
     public static void main(String[] args) {
         // TODO code application logic here
+        String cText = Encryption("0123456789ABCDEF", "133457799BBCDFF1");
+        System.out.println("Xtext:"+cText);
+        System.out.println(Decryption(cText, "133457799BBCDFF1"));
+        
+        
 
-        byte[] text = "No body can see me".getBytes();
-        byte[] textH = new BigInteger("0123456789ABCDEF", 16).toByteArray();
-        String[] key = keyGenerator("133457799BBCDFF1");
-        String cText = "";
+
+    }
+    
+    public static String Encryption(String mesage,String keyS){
+        byte[] textH = new BigInteger(mesage, 16).toByteArray();
+        String[] key = keyGenerator(keyS);
+        String cText ="";
         for (int i = 0; i < textH.length; i++) {
             String s1 = String.format("%8s", Integer.toBinaryString(textH[i] & 0xFF)).replace(' ', '0');
             cText += String.format("%8s", Integer.toBinaryString(textH[i] & 0xFF)).replace(' ', '0');
@@ -40,9 +48,25 @@ public class DES {
         cText = PERMUTATION(cText, IP);
         cText = STAGE2(cText, key);
         cText = PERMUTATION(cText, INVIP);
-        cText = String.format("%16X", Long.parseLong(cText,2)) ;
-
-
+        cText = String.format("%16X", Long.parseLong(cText,2));
+        return cText;
+    }
+    
+    public static String Decryption(String cTextS,String keyS){
+        byte[] textH = new BigInteger(cTextS, 16).toByteArray();
+        String[] key = keyGenerator(keyS);
+        String cText ="";
+        for (int i = 0; i < textH.length; i++) {
+            String s1 = String.format("%8s", Integer.toBinaryString(textH[i] & 0xFF)).replace(' ', '0');
+            cText += String.format("%8s", Integer.toBinaryString(textH[i] & 0xFF)).replace(' ', '0');
+            //System.out.println(i + " , " + key[i]);
+        }
+        cText = PERMUTATION(cText, IP);
+        cText = INVSTAGE2(cText, key);
+        cText = PERMUTATION(cText, INVIP);
+        cText = String.format("%16X", Long.parseLong(cText,2));
+        return cText;
+        
     }
 
     public static String[] keyGenerator(String key) {
@@ -121,6 +145,26 @@ public class DES {
         cMesage = Li + Ri;
         return cMesage;
     }
+    
+    public static String INVSTAGE2(String cText, String[] keys) {
+
+        String Li = cText.substring(0, 32);
+        String Ri = cText.substring(32, 64);
+        System.out.print("L16" + ":\t" + Li);
+        System.out.println(" R16" + ":\t" + Ri);
+        String cMesage = "";
+        for (int i = 16; i >= 1; i--) {
+           
+            String temp = Ri;
+            Ri = Li;
+            System.out.print("L" + i + ":\t" + Li);
+            Li = XOR(temp, inerF(Li, keys[i - 1]));//"00100011010010101010100110111011");
+            System.out.println(" R" + i + ":\t" + Ri);
+        }
+        cMesage = Li + Ri;
+        return cMesage;
+    }
+    
 
     public static String XORiner(String Li, String inerF) {
 
