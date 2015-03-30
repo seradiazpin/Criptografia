@@ -5,6 +5,8 @@
  */
 package des;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author sergioalejandrodiazpinilla
@@ -87,7 +89,7 @@ public class GUIDES extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 680, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,7 +108,7 @@ public class GUIDES extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -114,7 +116,7 @@ public class GUIDES extends javax.swing.JFrame {
             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Decription", jPanel2);
+        jTabbedPane1.addTab("Stage1", jPanel2);
 
         jLabel5.setText("Cmessage");
 
@@ -142,7 +144,6 @@ public class GUIDES extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton3)
                         .addGap(51, 51, 51)))
-                .addGap(18, 18, 18)
                 .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
@@ -298,8 +299,11 @@ public class GUIDES extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-
+        try{
         Encryption();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,"El mensaje y la clave deven estar en Hexadecimal");
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void cTexFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cTexFieldActionPerformed
@@ -311,8 +315,11 @@ public class GUIDES extends javax.swing.JFrame {
     }//GEN-LAST:event_cTexField1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        try{
         Decryption();
-
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,"El mensaje y la clave deven estar en Hexadecimal");
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
@@ -413,13 +420,13 @@ public class GUIDES extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
+    private static javax.swing.JPanel jPanel1;
+    private static javax.swing.JPanel jPanel2;
+    private static javax.swing.JPanel jPanel3;
+    private static javax.swing.JPanel jPanel4;
+    private static javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
+    private static javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private static javax.swing.JTabbedPane jTabbedPane1;
     static javax.swing.JTabbedPane jTabbedPane2;
