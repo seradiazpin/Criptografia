@@ -90,10 +90,18 @@ public class AES {
 
         String[][] message = strColToMatrix(strMessage);
         String[][] key = strColToMatrix(strKey);
+
+        System.out.println("Message");
+        printM(message);
+        System.out.println("Key");
+        printM(key);
+
         System.out.println("Generated Keys");
         String[][][] keys = keyGenerator(key);
+
         System.out.println("Encrypted message");
         String[][] encrypt = encryptMessage(message, key, keys);
+
         System.out.println("Decrypted message");
         printM(decryptMessage(encrypt, key, keys));
 
