@@ -7,6 +7,30 @@ def divM(M,n):
     tamM = len(M)
     tamN = len(str(n))
     newM = []
+    ini = 0
+
+    print(tamN,tamM)
+    print(M)
+    
+    while ini < tamM:
+        fin = ini + tamN
+        if (fin>tamM):
+            fin=tamM
+        if(int(M[ini:fin]) > n):
+            fin = fin - 1
+            
+        print(M[ini:fin]," menor que ",n) 
+        newM.append(int(M[ini:fin]))
+        ini=fin + 1
+                          
+        
+    return newM
+
+def divMsergio(M,n):
+    M = str(M)
+    tamM = len(M)
+    tamN = len(str(n))
+    newM = []
     i = 0
 
     print(tamN,tamM)
@@ -87,7 +111,7 @@ def keyGenerator():
     print("n:",n,"fi",fi)
     gcd = 0
     d = -1
-    while gcd != 1 and d < 0:
+    while gcd != 1 or d < 0:
         e = random.randint(2, fi-1)
         print ("e:",e)
         (gcd, d, y) = EEA(e, fi)
