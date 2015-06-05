@@ -1,5 +1,3 @@
-__author__ = 'sergioalejandrodiazpinilla'
-
 import random
 
 def divM(M,n):
@@ -9,8 +7,8 @@ def divM(M,n):
     newM = []
     ini = 0
 
-    print(tamN,tamM)
-    print(M)
+    #print(tamN,tamM)
+    #print(M)
     
     while ini < tamM:
         fin = ini + tamN
@@ -19,7 +17,7 @@ def divM(M,n):
         if(int(M[ini:fin]) > n):
             fin = fin - 1
             
-        print(M[ini:fin]," menor que ",n) 
+        #print(M[ini:fin]," menor que ",n)
         newM.append(int(M[ini:fin]))
         ini=fin + 1
                           
@@ -113,11 +111,11 @@ def keyGenerator():
     d = -1
     while gcd != 1 or d < 0:
         e = random.randint(2, fi-1)
-        print ("e:",e)
+        #print ("e:",e)
         (gcd, d, y) = EEA(e, fi)
 
-    print ("gcd:",gcd,"x:", d,"y:", y)
-    print((e*d)%fi)
+    #print ("gcd:",gcd,"x:", d,"y:", y)
+    #print((e*d)%fi)
     if d < 0:
         keys = {"public": (e, n), "private": (d, n)}
     else:
@@ -149,135 +147,21 @@ def decryption(c , key):
         j += 1
     return m, ci, long(c)
 
-"""
-def encryption(m , key):
-    print(keys)
-    print(keys.get("public")[1])
-    mi = []
-    ci = []
-    tamN = len(str(keys.get("public")[1]))
-
-    tamM = len(str(m))
-    print(tamN, tamM)
-
-    if tamN < tamM:
-        first = int(str(m)[0:tamN])
-        print("fir:",first)
-        if first > keys.get("public")[1]:
-            tamInt = tamN-1
-        else:
-            tamInt = tamN
-
-        i = 0
-        while tamM > tamInt*(i+1):
-            mi.append(int(str(m)[tamInt*i:tamInt*(i+1)]))
-            print(mi[i])
-            i += 1
-
-        mi.append(int(str(m)[tamInt*i:tamM]))
-        print(mi[i])
-        j = 0
-        c = ''
-        for s in mi:
-            ci.append(pow(s,key,keys.get("public")[1]))
-            c += str(ci[j])
-            j += 1
-
-    else:
-        c = ''
-        print m , key, keys.get("public")[1]
-        ci.append(pow(m,key,keys.get("public")[1]))
-        c += str(ci[0])
 
 
-    return mi, ci, long(c)
-"""
-"""
-def decryption(c , key):
-    print(keys)
-    mi = []
-    ci = []
-    tamN = len(str(keys.get("public")[1]))
-    print(str(c))
-    tamM = len(str(c))
-    print(tamN , tamM)
-    if tamN < tamM:
-        first = int(str(c)[0:tamN])
-        if key < first:
-            tamInt = tamN-1
-        else:
-            tamInt = tamN
-
-        i = 0
-        while tamM > tamInt*(i+1):
-            mi.append(int(str(c)[tamInt*i:tamInt*(i+1)]))
-            print(mi[i])
-            i += 1
-
-        mi.append(int(str(c)[tamInt*i:tamM]))
-        print(mi[i])
-        j = 0
-        c = ''
-        for s in mi:
-            ci.append(pow(s, keys.get("private")[0],keys.get("private")[1]))
-            c += str(ci[j])
-            j += 1
-
-    return mi, ci, long(c)
-
-"""
-"""
-def decryption(c , key):
-    print(keys)
-    print(keys.get("public")[1])
-    mi = []
-    ci = []
-    tamN = len(str(keys.get("public")[1]))
-
-    tamM = len(str(c))
-    print(tamN, tamM)
-
-    if tamN < tamM:
-        first = int(str(c)[0:tamN])
-        print("fir:",first)
-        if first > keys.get("public")[1]:
-            tamInt = tamN-1
-        else:
-            tamInt = tamN
-
-        i = 0
-        while tamM > tamInt*(i+1):
-            mi.append(int(str(c)[tamInt*i:tamInt*(i+1)]))
-            print(mi[i])
-            i += 1
-
-        mi.append(int(str(c)[tamInt*i:tamM]))
-        print(mi[i])
-        print(c,keys.get("private")[0],keys.get("private")[1])
-        j = 0
-        c2 = ''
-        for s in mi:
-            ci.append(pow(s, keys.get("private")[0], keys.get("private")[1]))
-            c2 += str(ci[j])
-            print(ci[j])
-            j += 1
-    else:
-        c2 = ''
-
-        ci.append(pow(c,key,keys.get("public")[1]))
-        c2 += str(ci[0])
-
-    return mi, ci, long(c2)
-"""
+def mesajeASC(m):
+    mesASC = ""
+    for i in m:
+        mesASC = mesASC + str(ord(i))
+    return int(mesASC)
 
 
 keys = keyGenerator()
 print(keys)
 mo = 6882326879666683
-print("original",mo)
+print("Mensaje original",mo)
 c = encryption(mo, keys.get("public")[0])[1]
 print("Encryp",c)
 
 m = decryption(c, keys.get("private")[0])[2]
 print("Decript",m)
-
